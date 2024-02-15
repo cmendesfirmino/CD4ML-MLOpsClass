@@ -1,0 +1,6 @@
+[project]
+name = 'cd4ml' 
+version = "1.0.0"
+
+[project.optional-dependencies]
+mlflow = ['awscli', 'boto3', 'mlflow', 'protobuf']
