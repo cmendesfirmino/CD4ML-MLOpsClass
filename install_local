@@ -6,7 +6,7 @@ echo activating virtualenv
 source .venv/bin/activate
 
 echo installing requirements
-pip3 install -r requirements.txt
+pip3 install .
 
 echo running tests
 ./run_tests.sh

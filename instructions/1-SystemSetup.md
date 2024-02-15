@@ -80,12 +80,12 @@ virtualenv --python=python3 .venv
 
 # On Mac/Linux run the following
 source .venv/bin/activate
-pip3 install -r requirements.txt
+pip3 install .
 
 # On Windows Powershell Run:
 Set-ExecutionPolicy RemoteSigned
 .venv/Scripts/activate.ps1
-pip3 install -r requirements.txt
+pip3 install .
 ```
 
 Note, if using PyCharm and virtualenv, be sure to select the right python interpreter for PyCharm. 
@@ -111,7 +111,7 @@ double click on "Install Certificates.command" file. That should fix it.
 ```bash
 git config --global user.email "<your email>"
 git config --global user.name "<your name>"
-pip install -r requirements.txt
+pip install .
 ```
 
 ### Next Steps
