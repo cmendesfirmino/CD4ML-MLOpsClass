@@ -4,6 +4,7 @@
 
 export PYTHONWARNINGS="ignore:numpy"
 
+source /venv/bin/activate
 command="python3 -m pytest --cov=cd4ml --cov-report html:cov_html test"
 
 echo "$command"

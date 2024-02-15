@@ -11,8 +11,6 @@ arrow
 wickedhot
 boto3
 protobuf
-
-# Testing Dependencies
 requests-mock
 flake8
 flake8-print
@@ -20,5 +18,4 @@ autopep8
 snakeviz
 pytest
 pytest-cov
-
 coverage
