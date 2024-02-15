@@ -48,14 +48,14 @@ pipeline {
                }
            }
            steps {
-                sh 'python3 run_python_script.py acceptance'
+                sh 'source /venv/bin/activate && python3 run_python_script.py acceptance'
            }
            post {
                 success {
-                    sh 'python3 run_python_script.py register_model ${MLFLOW_TRACKING_URL} yes'
+                    sh 'source /venv/bin/activate && python3 run_python_script.py register_model ${MLFLOW_TRACKING_URL} yes'
                 }
                 failure {
-                    sh 'python3 run_python_script.py register_model ${MLFLOW_TRACKING_URL} no'
+                    sh 'source /venv/bin/activate && python3 run_python_script.py register_model ${MLFLOW_TRACKING_URL} no'
                 }
            }
        }
