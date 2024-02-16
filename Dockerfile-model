@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.11-slim-buster
 
 USER root
 ENV FLUENTD_HOST "fluentd"
@@ -10,8 +10,8 @@ ENV MLFLOW_TRACKING_URL "http://mlflow:5000"
 RUN mkdir -p /app/cd4ml/
 WORKDIR /app/cd4ml/
 
-COPY pyproject.toml pyproject.toml
-RUN pip3 install .
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
 
 COPY cd4ml .
 
