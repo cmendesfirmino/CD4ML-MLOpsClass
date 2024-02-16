@@ -1,0 +1,80 @@
+name: MLPipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      problem_name: 
+        type: choice
+        options:
+        - groceries
+        - houses
+        - iris
+        default: houses
+      ml_pipeline_params_name: 
+        required: true
+        default: "default"
+      feature_set_name: 
+        default: default
+      algorithm_name: 
+        default: default
+      algorithm_params_name: 
+        default: default
+  push:
+    branches:
+      - main
+      - fix_dependencies
+
+jobs:
+  ml-pipeline:
+    runs-on: ubuntu-latest
+    container: cd4ml-mlopsclass_model:latest
+
+    env:
+      MLFLOW_TRACKING_URL: 'http://localhost:12000'
+      MLFLOW_S3_ENDPOINT_URL: 'http://localhost:9000'
+      AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_KEY }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install Git
+      run: apt-get update && apt-get install -y git
+
+    - name: Install Dependencies
+      run: ./install_dependencies.sh   
+
+    - name: Run Tests
+      run: ./run_tests.sh
+    
+    - name: Run ML Pipeline
+      run: python3 run_python_script.py pipeline "${{ github.event.inputs.problem_name }}" "${{ github.event.inputs.ml_pipeline_params_name }}" "${{ github.event.inputs.feature_set_name }}" "${{ github.event.inputs.algorithm_name }}" "${{ github.event.inputs.algorithm_params_name }}"
+    
+    - name: Run Tests and Register Model
+      run: |
+        if [ "${{ github.event.inputs.ml_pipeline_params_name }}" != "default" ] || \
+           [ "${{ github.event.inputs.feature_set_name }}" != "default" ] || \
+           [ "${{ github.event.inputs.algorithm_name }}" != "default" ] || \
+           [ "${{ github.event.inputs.algorithm_params_name }}" != "default" ]; then
+          echo "Skipping acceptance and registration since at least one parameter is not 'default'"
+        else
+          python3 run_python_script.py acceptance
+          
+          if [ $? -eq 0 ]; then
+            python3 run_python_script.py register_model "${MLFLOW_TRACKING_URL}" yes
+          else
+            python3 run_python_script.py register_model "${MLFLOW_TRACKING_URL}" no
+          fi
+        fi
+        - name: Run Acceptance Test and Register Model
+        run: |
+          if [ "${{ github.event.inputs.ml_pipeline_params_name }}" != "default" ] || \
+             [ "${{ github.event.inputs.feature_set_name }}" != "default" ] || \
+             [ "${{ github.event.inputs.algorithm_name }}" != "default" ] || \
+             [ "${{ github.event.inputs.algorithm_params_name }}" != "default" ]; then
+            set +e
+            python3 run_python_script.py acceptance
+            set -e
+            python3 run_python_script.py register_model "${MLFLOW_TRACKING_URL}" no
+          fi
