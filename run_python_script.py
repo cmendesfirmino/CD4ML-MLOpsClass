@@ -44,7 +44,9 @@ if __name__ == "__main__":
     cd4ml_logging.init()
     profiler = ' -p' in ' '.join(sys.argv)
     script = sys.argv[1]
+    print('*'*20, "Starting With Script", script)
     arguments = sys.argv[2:]
+    print('*'*20, "Starting With Arguments", arguments)
     # remove the profile flag now that profiler is on
     arguments = [i for i in arguments if i != '-p']
     run_python_script(script, arguments, profiler=profiler)
