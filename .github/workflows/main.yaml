@@ -19,10 +19,6 @@ on:
         default: default
       algorithm_params_name: 
         default: default
-  push:
-    branches:
-      - main
-      - fix_dependencies
 
 jobs:
   ml-pipeline:
